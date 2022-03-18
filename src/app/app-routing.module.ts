@@ -1,18 +1,42 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import {LayoutComponent} from "./layout/layout.component";
+import {CallbackComponent} from "./core/callback/callback.component";
+import { LabMfeOneModule } from "./lab-mfe-one/lab-mfe-one.module"
 
-const routes: Routes = [{
-  path: 'home',
-  component: HomeComponent,
-}, {
-  path: '',
-  redirectTo: '/home',
-  pathMatch: 'full'
-}];
+const routes: Routes = [
+  {
+    path: "",
+    component: LayoutComponent,
+    children: [
+      {
+        path: "coco",
+        redirectTo: "/home",
+        pathMatch: "full"
+      },
+      {
+        path: "",
+        component: HomeComponent
+      },
+      {
+        path: "mfe-1",
+        loadChildren: () => LabMfeOneModule
+      }, {
+        path: "cb",
+        component: CallbackComponent
+      }
+    ]
+  }
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true})],
+  imports: [RouterModule.forRoot(routes, {
+    useHash: true,
+    enableTracing: false,
+    preloadingStrategy: PreloadAllModules
+  })],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
